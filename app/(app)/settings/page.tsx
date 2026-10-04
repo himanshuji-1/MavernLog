@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { signOut } from "./actions";
 
@@ -12,9 +13,15 @@ export default async function SettingsPage() {
         Signed in as {data.user?.email ?? "unknown"}
       </p>
 
-      <p className="mt-6 rounded-xl border border-dashed border-zinc-300 p-4 text-sm text-zinc-500 dark:border-zinc-700">
-        Targets and exercise list editing arrive in Phase 3.
-      </p>
+      <Link
+        href="/settings/exercises"
+        className="mt-6 flex min-h-14 items-center justify-between rounded-xl border border-zinc-200 px-4 font-medium active:bg-zinc-50 dark:border-zinc-800 dark:active:bg-zinc-900"
+      >
+        Exercises
+        <span aria-hidden="true" className="text-zinc-400">
+          ›
+        </span>
+      </Link>
 
       <form action={signOut} className="mt-8">
         <button

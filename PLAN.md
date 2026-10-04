@@ -4,12 +4,20 @@
 
 A mobile-first fitness progression web app. Users log bodyweight, daily habits and workout sets; plain, tested code decides next session's weights and weekly diet adjustments. Gemini only turns spoken sentences into structured data and explains the decisions. It never does the maths.
 
-**Status:** Phase 1 done and committed. Phase 2 built; waiting for your checks and okay. Phases 3–6 not started.
+**Status:** Phases 1–2 done and committed. Phase 3 built; waiting for your checks and okay. Phases 4–6 not started.
 
 **Phase 1 notes (deviations from the plan above):**
 - Next 16 renamed `middleware` to `proxy`, so the file is `proxy.ts`. It refreshes the session and sends signed-out users to `/login`.
 - The "not onboarded yet → `/onboarding`" check runs in the `(app)` layout instead of the proxy, because it needs a database query.
 - Onboarding requires goal weight below current weight (the engine is built around fat loss).
+
+**Phase 2 notes:** the wellbeing check-in also shows on Monday for the week that just ended (grace day for a missed Sunday).
+
+**Phase 3 notes:**
+- A session only counts as a "hit" if all of the exercise's target sets were logged, as well as every set reaching the target reps at RIR ≤ 2. Fewer sets logged → hold the weight.
+- "Working weight" = the heaviest set of the last session.
+- The deload rounds *down* to 2.5 kg, so it can be a bit more than 7% (e.g. 40 kg → 35 kg).
+- History used for targets covers the last 120 days.
 
 ---
 
