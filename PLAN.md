@@ -4,7 +4,7 @@
 
 A mobile-first fitness progression web app. Users log bodyweight, daily habits and workout sets; plain, tested code decides next session's weights and weekly diet adjustments. Gemini only turns spoken sentences into structured data and explains the decisions. It never does the maths.
 
-**Status:** Phase 1 built; waiting for your checks and okay. Phases 2–6 not started.
+**Status:** Phase 1 done and committed. Phase 2 built; waiting for your checks and okay. Phases 3–6 not started.
 
 **Phase 1 notes (deviations from the plan above):**
 - Next 16 renamed `middleware` to `proxy`, so the file is `proxy.ts`. It refreshes the session and sends signed-out users to `/login`.

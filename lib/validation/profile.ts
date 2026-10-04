@@ -1,11 +1,7 @@
 import { z } from "zod";
+import { range } from "./shared";
 
 export const MIN_SAFE_CALORIES = 1800;
-
-function range(label: string, unit: string, min: number, max: number) {
-  const message = `${label} must be between ${min} and ${max}${unit}`;
-  return z.coerce.number({ error: message }).min(min, message).max(max, message);
-}
 
 function isValidTimeZone(tz: string) {
   try {

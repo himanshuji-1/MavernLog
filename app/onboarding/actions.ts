@@ -3,30 +3,18 @@
 import { redirect } from "next/navigation";
 import { DEFAULT_EXERCISES } from "@/lib/default-exercises";
 import { createClient, getUserId } from "@/lib/supabase/server";
+import { formToValues, zodFieldErrors, type FormState } from "@/lib/validation/form";
 import { onboardingSchema } from "@/lib/validation/profile";
 
-export type OnboardingState = {
-  values: Record<string, string>;
-  fieldErrors: Record<string, string>;
-  formError?: string;
-} | null;
-
 export async function completeOnboarding(
-  _prev: OnboardingState,
+  _prev: FormState,
   formData: FormData,
-): Promise<OnboardingState> {
-  const values: Record<string, string> = {};
-  for (const [key, value] of formData.entries()) {
-    if (typeof value === "string") values[key] = value;
-  }
+): Promise<FormState> {
+  const values = formToValues(formData);
 
   const parsed = onboardingSchema.safeParse(values);
   if (!parsed.success) {
-    const fieldErrors: Record<string, string> = {};
-    for (const issue of parsed.error.issues) {
-      fieldErrors[String(issue.path[0] ?? "form")] ??= issue.message;
-    }
-    return { values, fieldErrors };
+    return { values, fieldErrors: zodFieldErrors(parsed.error) };
   }
 
   const supabase = await createClient();
