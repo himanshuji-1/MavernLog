@@ -1,7 +1,9 @@
 import { z } from "zod";
+import { MIN_CALORIES } from "@/lib/engine/weeklyReview";
 import { range } from "./shared";
 
-export const MIN_SAFE_CALORIES = 1800;
+/** One source of truth for the floor: the engine's. */
+export const MIN_SAFE_CALORIES = MIN_CALORIES;
 
 function isValidTimeZone(tz: string) {
   try {

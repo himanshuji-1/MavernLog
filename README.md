@@ -36,4 +36,5 @@ npm run lint
 npm run typecheck
 npm test
 npx supabase db push
+npm run seed -- --email you@gmail.com --confirm   # 8 weeks of fake data for ONE user (needs SUPABASE_SERVICE_ROLE_KEY in .env.local)
 ```

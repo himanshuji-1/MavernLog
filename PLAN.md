@@ -4,7 +4,7 @@
 
 A mobile-first fitness progression web app. Users log bodyweight, daily habits and workout sets; plain, tested code decides next session's weights and weekly diet adjustments. Gemini only turns spoken sentences into structured data and explains the decisions. It never does the maths.
 
-**Status:** Phases 1–2 done and committed. Phase 3 built; waiting for your checks and okay. Phases 4–6 not started.
+**Status:** Phases 1–3 done and committed. Phase 4 built; waiting for your checks and okay. Phases 5–6 not started.
 
 **Phase 1 notes (deviations from the plan above):**
 - Next 16 renamed `middleware` to `proxy`, so the file is `proxy.ts`. It refreshes the session and sends signed-out users to `/login`.
@@ -18,6 +18,15 @@ A mobile-first fitness progression web app. Users log bodyweight, daily habits a
 - "Working weight" = the heaviest set of the last session.
 - The deload rounds *down* to 2.5 kg, so it can be a bit more than 7% (e.g. 40 kg → 35 kg).
 - History used for targets covers the last 120 days.
+
+**Phase 4 notes (rules the plan left open):**
+- **Stall = 2 fresh flat weeks.** After a ladder step, the app needs two *new* flat weeks before the next step, so changes are never stacked on top of each other. Only a previous "watching a flat week" review counts toward the streak.
+- **Calorie floor is checked before the data check**, so a first-week target below 1,800 is raised even when there are too few weigh-ins to review.
+- **A diet break is a suggestion**: it does not change your targets (the app can't know your maintenance calories). It restarts the ladder at rung 1 afterwards. Triggered by low wellbeing two weeks running, or by the ladder running out / a calorie cut being blocked by the 1,800 floor.
+- **Adherence "weakest habit"** is picked from: diet, weighing in, step target (if set), sleep 7h+. 
+- **The first week** has nothing to compare against, so it is a baseline review ("not enough data", nothing changes). Weeks with no logs at all are skipped.
+- Reviews are calculated when you open the Review tab and are **not recalculated** if you later edit an old log.
+- The seed's weight goes 90 → about 87.8 kg (not 86.5): the 2-week stall plus keeping every on-track week safely inside 0.3–0.7% makes that the realistic result.
 
 ---
 
