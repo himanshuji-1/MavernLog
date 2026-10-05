@@ -1,11 +1,13 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
+import { isGeminiConfigured } from "@/lib/ai/gemini";
 import { formatShortDate } from "@/lib/dates";
 import { LOSS_ON_TRACK_MAX_PCT, LOSS_ON_TRACK_MIN_PCT } from "@/lib/engine/weeklyReview";
 import { OUTCOME_DISPLAY } from "@/lib/review-display";
 import { REVIEW_COLUMNS, normalizeReview, runPendingReviews, type ReviewRow } from "@/lib/reviews";
 import { createClient, getUserId } from "@/lib/supabase/server";
 import { resolveToday } from "@/lib/today";
+import { ExplainButton } from "./explain-button";
 
 const kcal = (n: number) => n.toLocaleString("en-US");
 const pct = (n: number, d = 2) => `${Number(n.toFixed(d))}%`;
@@ -35,7 +37,7 @@ function targetChanges(r: ReviewRow): string[] {
   return changes;
 }
 
-function ReviewCard({ review, detailed }: { review: ReviewRow; detailed: boolean }) {
+function ReviewCard({ review, detailed, explain }: { review: ReviewRow; detailed: boolean; explain: boolean }) {
   const display = OUTCOME_DISPLAY[review.outcome];
   const changes = targetChanges(review);
 
@@ -49,6 +51,7 @@ function ReviewCard({ review, detailed }: { review: ReviewRow; detailed: boolean
       </div>
 
       <p className="mt-3 text-base leading-relaxed">{review.message}</p>
+      {explain && <ExplainButton weekStart={review.week_start} />}
 
       {changes.length > 0 && (
         <ul className="mt-3 rounded-xl bg-violet-50 px-3 py-2 text-sm font-medium dark:bg-violet-950/30">
@@ -105,6 +108,7 @@ export default async function ReviewPage({ searchParams }: PageProps<"/review">)
     supabase.from("profiles").select("calorie_target, step_target, protein_target_g").maybeSingle(),
   ]);
 
+  const explainEnabled = isGeminiConfigured();
   const reviews = (reviewRows ?? []).map(normalizeReview);
   const [latest, ...older] = reviews;
 
@@ -127,7 +131,7 @@ export default async function ReviewPage({ searchParams }: PageProps<"/review">)
         </p>
       ) : (
         <>
-          <ReviewCard review={latest} detailed />
+          <ReviewCard review={latest} detailed explain={explainEnabled} />
           {older.length > 0 && (
             <div>
               <h2 className="mb-2 text-sm font-semibold text-zinc-500 dark:text-zinc-400">Earlier weeks</h2>
@@ -144,7 +148,7 @@ export default async function ReviewPage({ searchParams }: PageProps<"/review">)
                         </span>
                       </summary>
                       <div className="pb-4">
-                        <ReviewCard review={r} detailed />
+                        <ReviewCard review={r} detailed explain={explainEnabled} />
                       </div>
                     </details>
                   </li>

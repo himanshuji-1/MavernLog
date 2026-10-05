@@ -10,7 +10,8 @@
     "typecheck": "next typegen && tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
-    "seed": "tsx scripts/seed.ts"
+    "seed": "tsx scripts/seed.ts",
+    "gemini:check": "tsx scripts/gemini-check.ts"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.7",

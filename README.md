@@ -28,6 +28,13 @@ Log your day. The app decides what's next. See [PLAN.md](PLAN.md) for the phased
 2. Add the environment variables `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY`.
 3. Every branch push gets a preview URL. Use it for phone testing: Google sign-in won't redirect to a LAN IP.
 
+## Gemini quick log (Phase 6)
+1. Create a key at <https://aistudio.google.com/apikey>.
+2. Put `GEMINI_API_KEY=...` in `.env.local`, and in Vercel (Project → Settings → Environment Variables). **Never** prefix it with `NEXT_PUBLIC_`.
+3. `npx supabase db push` (adds the usage table used for rate limiting), then `npm run gemini:check` to test the key.
+
+Without a key the app works as before: the quick-log box and "Explain this" buttons simply don't appear.
+
 ## Everyday commands
 
 ```bash
@@ -36,5 +43,6 @@ npm run lint
 npm run typecheck
 npm test
 npx supabase db push
+npm run gemini:check   # tests your Gemini key with two sample sentences
 npm run seed -- --email you@gmail.com --confirm   # 8 weeks of fake data for ONE user (needs SUPABASE_SERVICE_ROLE_KEY in .env.local)
 ```

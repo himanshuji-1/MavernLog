@@ -1,10 +1,14 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
+import { dateOptions } from "@/lib/ai/quicklog";
+import { isGeminiConfigured } from "@/lib/ai/gemini";
 import { isWithinLastDays, wellbeingTargetWeek } from "@/lib/dates";
 import { createClient } from "@/lib/supabase/server";
 import { resolveToday } from "@/lib/today";
+import { loadExercises } from "@/lib/workout-data";
 import { DailyLogCard } from "./daily-log-card";
 import { DateSwitcher } from "./date-switcher";
+import { QuickLogCard } from "./quick-log-card";
 import { WellbeingCard } from "./wellbeing-card";
 
 const first = (v: string | string[] | undefined) => (typeof v === "string" ? v : null);
@@ -27,7 +31,9 @@ export default async function TodayPage({ searchParams }: PageProps<"/today">) {
   const date = requested && isWithinLastDays(requested, today, 7) ? requested : today;
   const checkinWeek = wellbeingTargetWeek(today);
 
-  const [logResult, lastWeightResult, checkinResult] = await Promise.all([
+  const quickLogEnabled = isGeminiConfigured();
+
+  const [logResult, lastWeightResult, checkinResult, allExercises] = await Promise.all([
     supabase
       .from("daily_logs")
       .select("bodyweight_kg, steps, sleep_hours, diet_followed, hunger, updated_at")
@@ -49,6 +55,7 @@ export default async function TodayPage({ searchParams }: PageProps<"/today">) {
           .eq("week_start", checkinWeek)
           .maybeSingle()
       : Promise.resolve({ data: null }),
+    quickLogEnabled ? loadExercises(supabase) : Promise.resolve([]),
   ]);
 
   const log = logResult.data;
@@ -59,6 +66,13 @@ export default async function TodayPage({ searchParams }: PageProps<"/today">) {
     <div className="flex flex-col gap-4">
       <DateSwitcher date={date} today={today} asOf={asOf} />
       {showCheckin && <WellbeingCard asOf={asOf} />}
+      {quickLogEnabled && (
+        <QuickLogCard
+          exercises={allExercises.filter((e) => !e.archived).map((e) => ({ id: e.id, name: e.name }))}
+          dates={dateOptions(today)}
+          asOf={asOf}
+        />
+      )}
       <DailyLogCard
         // Re-mount after each save so the card returns to its "Logged ✓" summary.
         key={`${date}:${log?.updated_at ?? "new"}`}

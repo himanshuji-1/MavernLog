@@ -4,7 +4,7 @@
 
 A mobile-first fitness progression web app. Users log bodyweight, daily habits and workout sets; plain, tested code decides next session's weights and weekly diet adjustments. Gemini only turns spoken sentences into structured data and explains the decisions. It never does the maths.
 
-**Status:** Phases 1–4 done and committed. Phase 5 built; waiting for your checks and okay. Phase 6 not started.
+**Status:** Phases 1–5 done and committed. Phase 6 built; waiting for your checks and okay.
 
 **Phase 1 notes (deviations from the plan above):**
 - Next 16 renamed `middleware` to `proxy`, so the file is `proxy.ts`. It refreshes the session and sends signed-out users to `/login`.
@@ -34,6 +34,14 @@ A mobile-first fitness progression web app. Users log bodyweight, daily habits a
 - The goal line is always included in the chart's vertical range, so a goal far below your weight compresses the trend. Say if you'd rather it be optional.
 - Supabase silently caps a query at 1,000 rows. History and weigh-in queries are now read page by page so long histories aren't cut off.
 - Polish: white-on-emerald buttons and dim greys/reds were below the 4.5:1 contrast needed in places (emerald-600 → 700, extra dark-mode shades), small links now have 44px tap areas, per-page titles, loading skeletons, and safe-area padding.
+
+**Phase 6 notes:**
+- **API:** Gemini's `generateContent` endpoint (Google lists it as fully supported, though newer features go to a new "Interactions" API). Default model `gemini-3.5-flash-lite` (cheap and fast; verified live with `npm run gemini:check`). `gemini-3.8-flash` returned "503 high demand" during testing, so the client also retries temporary 5xx errors twice. Set `GEMINI_MODEL` to change it.
+- **Gemini never does maths.** Units are returned as stated and converted in code (lb → kg). "Yesterday" is resolved by picking a row from a 7-day lookup table we send, then the date is computed in code. Its reply must match a strict schema; any extra or calculated field rejects the whole reply.
+- **Doubtful values are flagged, never guessed:** a missing RIR, unknown exercise, or out-of-range number stays blank/kept as heard and highlighted for you to fix.
+- **Saving merges** onto the day's existing log, so "slept 7 hours" never wipes out a weight logged earlier. A quick-logged workout is saved as one finished session, so it counts towards next targets.
+- **Rate limit:** 20 calls/hour and 100/day per user per feature (stored in a small `ai_usage` table; it holds no user text).
+- **Explain this:** the answer is rejected if it contains any number that wasn't in the review's facts (it is told not to add numbers, and the code checks).
 
 ---
 

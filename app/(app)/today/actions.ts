@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { isWithinLastDays, wellbeingTargetWeek } from "@/lib/dates";
+import { upsertDailyLog } from "@/lib/server/records";
 import { createClient, getUserId } from "@/lib/supabase/server";
 import { resolveToday } from "@/lib/today";
 import { dailyLogSchema, wellbeingSchema } from "@/lib/validation/daily";
@@ -40,11 +41,7 @@ export async function saveDailyLog(
     return { values, fieldErrors: { form: "You can only log the last 7 days." } };
   }
 
-  // Nulls are sent on purpose: clearing a field while editing must clear it.
-  const { error } = await supabase.from("daily_logs").upsert(
-    { user_id: userId, ...parsed.data, updated_at: new Date().toISOString() },
-    { onConflict: "user_id,log_date" },
-  );
+  const { error } = await upsertDailyLog(supabase, userId, parsed.data);
   if (error) return { values, fieldErrors: {}, formError: SAVE_ERROR };
 
   revalidatePath("/today");
