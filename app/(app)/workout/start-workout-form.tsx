@@ -60,7 +60,7 @@ export function StartWorkoutForm({
       </ul>
 
       {state?.formError && (
-        <p role="alert" className="text-sm text-red-600">
+        <p role="alert" className="text-sm text-red-600 dark:text-red-400">
           {state.formError}
         </p>
       )}
@@ -68,7 +68,7 @@ export function StartWorkoutForm({
       <button
         type="submit"
         disabled={pending}
-        className="sticky bottom-[calc(4.75rem+env(safe-area-inset-bottom))] h-12 w-full rounded-xl bg-emerald-600 text-base font-semibold text-white shadow-lg transition active:scale-[0.98] disabled:opacity-60"
+        className="sticky bottom-[calc(4.75rem+env(safe-area-inset-bottom))] h-12 w-full rounded-xl bg-emerald-700 text-base font-semibold text-white shadow-lg transition active:scale-[0.98] disabled:opacity-60"
       >
         {pending ? "Starting…" : "Start workout"}
       </button>

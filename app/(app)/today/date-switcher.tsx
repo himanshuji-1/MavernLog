@@ -42,7 +42,7 @@ export function DateSwitcher({
           {date === today ? "Today" : formatShortDate(date)}
         </h1>
         {date === today && (
-          <p className="text-sm text-zinc-500">{formatShortDate(date)}</p>
+          <p className="text-sm text-zinc-500 dark:text-zinc-400">{formatShortDate(date)}</p>
         )}
       </div>
       {next ? (

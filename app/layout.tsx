@@ -8,7 +8,7 @@ const geistSans = Geist({
 });
 
 export const metadata: Metadata = {
-  title: "MavernLog",
+  title: { default: "MavernLog", template: "%s · MavernLog" },
   description: "Log your day. The app decides what's next.",
   appleWebApp: {
     capable: true,

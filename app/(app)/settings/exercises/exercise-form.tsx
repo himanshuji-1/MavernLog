@@ -47,7 +47,7 @@ export function ExerciseForm({ exercise }: { exercise?: Exercise }) {
           className={input}
         />
         {e.name && (
-          <p role="alert" className="mt-1.5 text-sm text-red-600">
+          <p role="alert" className="mt-1.5 text-sm text-red-600 dark:text-red-400">
             {e.name}
           </p>
         )}
@@ -78,7 +78,7 @@ export function ExerciseForm({ exercise }: { exercise?: Exercise }) {
             className={input}
           />
           {e.target_sets && (
-            <p role="alert" className="mt-1.5 text-sm text-red-600">
+            <p role="alert" className="mt-1.5 text-sm text-red-600 dark:text-red-400">
               {e.target_sets}
             </p>
           )}
@@ -98,7 +98,7 @@ export function ExerciseForm({ exercise }: { exercise?: Exercise }) {
             className={input}
           />
           {e.target_reps && (
-            <p role="alert" className="mt-1.5 text-sm text-red-600">
+            <p role="alert" className="mt-1.5 text-sm text-red-600 dark:text-red-400">
               {e.target_reps}
             </p>
           )}
@@ -106,7 +106,7 @@ export function ExerciseForm({ exercise }: { exercise?: Exercise }) {
       </div>
 
       {state?.formError && (
-        <p role="alert" className="text-sm text-red-600">
+        <p role="alert" className="text-sm text-red-600 dark:text-red-400">
           {state.formError}
         </p>
       )}
@@ -119,7 +119,7 @@ export function ExerciseForm({ exercise }: { exercise?: Exercise }) {
       <button
         type="submit"
         disabled={pending}
-        className="h-12 w-full rounded-xl bg-emerald-600 text-base font-semibold text-white transition active:scale-[0.98] disabled:opacity-60"
+        className="h-12 w-full rounded-xl bg-emerald-700 text-base font-semibold text-white transition active:scale-[0.98] disabled:opacity-60"
       >
         {pending ? "Saving…" : exercise ? "Save changes" : "Add exercise"}
       </button>

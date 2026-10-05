@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { addDays } from "@/lib/dates";
@@ -7,6 +8,8 @@ import { lastWorkoutExerciseIds, loadExercises, loadHistory, targetsFor } from "
 import { StartWorkoutForm } from "./start-workout-form";
 
 const first = (v: string | string[] | undefined) => (typeof v === "string" ? v : null);
+
+export const metadata: Metadata = { title: "Workout" };
 
 export default async function WorkoutPage({ searchParams }: PageProps<"/workout">) {
   const params = await searchParams;
@@ -51,7 +54,7 @@ export default async function WorkoutPage({ searchParams }: PageProps<"/workout"
       )}
 
       {exercises.length === 0 ? (
-        <p className="rounded-xl border border-dashed border-zinc-300 p-4 text-sm text-zinc-500 dark:border-zinc-700">
+        <p className="rounded-xl border border-dashed border-zinc-300 p-4 text-sm text-zinc-500 dark:text-zinc-400 dark:border-zinc-700">
           You have no active exercises.{" "}
           <Link href="/settings/exercises" className="font-medium text-emerald-700 underline dark:text-emerald-400">
             Add one in Settings
@@ -67,7 +70,7 @@ export default async function WorkoutPage({ searchParams }: PageProps<"/workout"
             {lastIds.length > 0 && !repeat && (
               <Link
                 href={asOf ? `/workout?repeat=1&asOf=${asOf}` : "/workout?repeat=1"}
-                className="shrink-0 rounded-lg border border-zinc-300 px-3 py-2 text-sm font-medium active:scale-95 dark:border-zinc-700"
+                className="inline-flex min-h-11 shrink-0 items-center rounded-lg border border-zinc-300 px-3 text-sm font-medium active:scale-95 dark:border-zinc-700"
               >
                 Repeat last
               </Link>

@@ -47,13 +47,13 @@ function Field({
           onChange={onChange ? (e) => onChange(e.target.value) : undefined}
           className="h-12 w-full rounded-xl border border-zinc-300 bg-white px-4 pr-14 text-base outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-600/30 aria-[invalid=true]:border-red-500 dark:border-zinc-700 dark:bg-zinc-900"
         />
-        <span className="pointer-events-none absolute inset-y-0 right-4 flex items-center text-sm text-zinc-500">
+        <span className="pointer-events-none absolute inset-y-0 right-4 flex items-center text-sm text-zinc-500 dark:text-zinc-400">
           {unit}
         </span>
       </div>
-      {hint && !error && <p className="mt-1.5 text-xs text-zinc-500">{hint}</p>}
+      {hint && !error && <p className="mt-1.5 text-xs text-zinc-500 dark:text-zinc-400">{hint}</p>}
       {error && (
-        <p id={`${name}-error`} role="alert" className="mt-1.5 text-sm text-red-600">
+        <p id={`${name}-error`} role="alert" className="mt-1.5 text-sm text-red-600 dark:text-red-400">
           {error}
         </p>
       )}
@@ -106,7 +106,7 @@ export function OnboardingForm() {
       <Field name="protein_target_g" label="Daily protein target" unit="g" inputMode="numeric" placeholder="160" defaultValue={v.protein_target_g} error={e.protein_target_g} />
 
       {state?.formError && (
-        <p role="alert" className="text-sm text-red-600">
+        <p role="alert" className="text-sm text-red-600 dark:text-red-400">
           {state.formError}
         </p>
       )}
@@ -114,7 +114,7 @@ export function OnboardingForm() {
       <button
         type="submit"
         disabled={pending}
-        className="mt-2 h-12 w-full rounded-xl bg-emerald-600 text-base font-semibold text-white transition active:scale-[0.98] disabled:opacity-60"
+        className="mt-2 h-12 w-full rounded-xl bg-emerald-700 text-base font-semibold text-white transition active:scale-[0.98] disabled:opacity-60"
       >
         {pending ? "Saving…" : "Start tracking"}
       </button>

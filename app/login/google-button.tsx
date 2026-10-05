@@ -50,7 +50,7 @@ export function GoogleButton() {
         {pending ? "Redirecting…" : "Continue with Google"}
       </button>
       {error && (
-        <p role="alert" className="mt-3 text-center text-sm text-red-600">
+        <p role="alert" className="mt-3 text-center text-sm text-red-600 dark:text-red-400">
           {error}
         </p>
       )}

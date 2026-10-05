@@ -75,7 +75,7 @@ function SetForm({
         />
 
         {(state?.formError ?? e.form) && (
-          <p role="alert" className="text-sm text-red-600">
+          <p role="alert" className="text-sm text-red-600 dark:text-red-400">
             {state?.formError ?? e.form}
           </p>
         )}
@@ -83,7 +83,7 @@ function SetForm({
         <button
           type="submit"
           disabled={pending}
-          className="h-12 w-full rounded-xl bg-emerald-600 text-base font-semibold text-white transition active:scale-[0.98] disabled:opacity-60"
+          className="h-12 w-full rounded-xl bg-emerald-700 text-base font-semibold text-white transition active:scale-[0.98] disabled:opacity-60"
         >
           {pending ? "Saving…" : `Log set ${setNumber} ✓`}
         </button>
@@ -151,7 +151,7 @@ export function ExerciseLogger({
                   <input type="hidden" name="set_number" value={s.set_number} />
                   <button
                     type="submit"
-                    className="h-11 w-full rounded-xl border border-red-300 text-sm font-medium text-red-600 dark:border-red-900"
+                    className="h-11 w-full rounded-xl border border-red-300 text-sm font-medium text-red-600 dark:text-red-400 dark:border-red-900"
                   >
                     Delete set
                   </button>
@@ -169,7 +169,7 @@ export function ExerciseLogger({
                 {formatKg(s.weight_kg)} × {s.reps} · RIR {s.rir}
               </span>
               <span className="flex items-center gap-1">
-                <span aria-label="Logged" className="text-emerald-600">
+                <span aria-label="Logged" className="text-emerald-700 dark:text-emerald-400">
                   ✓
                 </span>
                 <button

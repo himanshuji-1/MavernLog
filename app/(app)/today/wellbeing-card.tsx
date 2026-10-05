@@ -35,7 +35,7 @@ export function WellbeingCard({ asOf }: { asOf: string | null }) {
       />
 
       {state?.formError && (
-        <p role="alert" className="text-sm text-red-600">
+        <p role="alert" className="text-sm text-red-600 dark:text-red-400">
           {state.formError}
         </p>
       )}
@@ -43,7 +43,7 @@ export function WellbeingCard({ asOf }: { asOf: string | null }) {
       <button
         type="submit"
         disabled={pending}
-        className="h-12 w-full rounded-xl bg-emerald-600 text-base font-semibold text-white transition active:scale-[0.98] disabled:opacity-60"
+        className="h-12 w-full rounded-xl bg-emerald-700 text-base font-semibold text-white transition active:scale-[0.98] disabled:opacity-60"
       >
         {pending ? "Saving…" : "Save check-in"}
       </button>

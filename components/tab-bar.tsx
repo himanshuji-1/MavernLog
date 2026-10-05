@@ -44,7 +44,7 @@ export function TabBar() {
                 aria-current={active ? "page" : undefined}
                 className={`flex min-h-14 flex-col items-center justify-center gap-0.5 text-xs font-medium ${
                   active
-                    ? "text-emerald-600 dark:text-emerald-400"
+                    ? "text-emerald-700 dark:text-emerald-400"
                     : "text-zinc-500 dark:text-zinc-400"
                 }`}
               >

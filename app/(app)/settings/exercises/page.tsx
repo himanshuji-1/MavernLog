@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { loadExercises, type Exercise } from "@/lib/workout-data";
@@ -19,6 +20,8 @@ function ArchiveButton({ exercise, archive }: { exercise: Exercise; archive: boo
   );
 }
 
+export const metadata: Metadata = { title: "Exercises" };
+
 export default async function ExercisesSettingsPage() {
   const supabase = await createClient();
   const exercises = await loadExercises(supabase);
@@ -28,7 +31,7 @@ export default async function ExercisesSettingsPage() {
   return (
     <section className="flex flex-col gap-5">
       <div>
-        <Link href="/settings" className="text-sm text-zinc-500">
+        <Link href="/settings" className="inline-flex min-h-11 items-center text-sm text-zinc-500 dark:text-zinc-400">
           ← Settings
         </Link>
         <h1 className="mt-1 text-2xl font-bold tracking-tight">Exercises</h1>
@@ -52,7 +55,7 @@ export default async function ExercisesSettingsPage() {
               <summary className="flex min-h-14 cursor-pointer items-center justify-between gap-3">
                 <span>
                   <span className="font-semibold">{e.name}</span>
-                  <span className="ml-2 text-sm text-zinc-500">
+                  <span className="ml-2 text-sm text-zinc-500 dark:text-zinc-400">
                     {e.body_region} · {e.target_sets} × {e.target_reps}
                   </span>
                 </span>
@@ -74,12 +77,12 @@ export default async function ExercisesSettingsPage() {
 
       {archived.length > 0 && (
         <div>
-          <h2 className="mb-2 text-sm font-semibold text-zinc-500">Archived</h2>
+          <h2 className="mb-2 text-sm font-semibold text-zinc-500 dark:text-zinc-400">Archived</h2>
           <ul className="flex flex-col gap-2">
             {archived.map((e) => (
               <li
                 key={e.id}
-                className="flex items-center justify-between rounded-2xl border border-dashed border-zinc-300 px-4 py-1 text-zinc-500 dark:border-zinc-700"
+                className="flex items-center justify-between rounded-2xl border border-dashed border-zinc-300 px-4 py-1 text-zinc-500 dark:text-zinc-400 dark:border-zinc-700"
               >
                 <span>{e.name}</span>
                 <ArchiveButton exercise={e} archive={false} />

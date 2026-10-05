@@ -1,5 +1,6 @@
 import type { createClient } from "@/lib/supabase/server";
 import { addDays } from "@/lib/dates";
+import { fetchAll } from "@/lib/supabase/paginate";
 import { sessionsForExercise, type HistoryRow } from "@/lib/engine/history";
 import { nextTarget, type BodyRegion, type Target } from "@/lib/engine/progression";
 
@@ -41,18 +42,30 @@ type RawRow = {
     | null;
 };
 
-/** Every logged set in the last HISTORY_DAYS, flattened with its session's date. */
-export async function loadHistory(supabase: Supabase, today: string): Promise<HistoryRow[]> {
-  const { data } = await supabase
-    .from("workout_sets")
-    .select(
-      "session_id, exercise_id, weight_kg, reps, rir, workout_sessions!inner(performed_on, started_at)",
-    )
-    .gte("workout_sessions.performed_on", addDays(today, -HISTORY_DAYS))
-    .limit(5000);
+/**
+ * Every logged set in the last `sinceDays` days (or all of them with null),
+ * flattened with its session's date.
+ */
+export async function loadHistory(
+  supabase: Supabase,
+  today: string,
+  sinceDays: number | null = HISTORY_DAYS,
+): Promise<HistoryRow[]> {
+  const since = sinceDays === null ? null : addDays(today, -sinceDays);
+
+  const data = await fetchAll<RawRow>((from, to) => {
+    const query = supabase
+      .from("workout_sets")
+      .select(
+        "session_id, exercise_id, weight_kg, reps, rir, workout_sessions!inner(performed_on, started_at)",
+      );
+    return (since === null ? query : query.gte("workout_sessions.performed_on", since))
+      .order("id")
+      .range(from, to) as unknown as PromiseLike<{ data: RawRow[] | null; error: unknown }>;
+  });
 
   const rows: HistoryRow[] = [];
-  for (const raw of (data ?? []) as unknown as RawRow[]) {
+  for (const raw of data) {
     const session = Array.isArray(raw.workout_sessions)
       ? raw.workout_sessions[0]
       : raw.workout_sessions;

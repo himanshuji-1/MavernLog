@@ -22,7 +22,7 @@ export default async function AppLayout({ children }: LayoutProps<"/">) {
         <Link
           href="/settings"
           aria-label="Settings"
-          className="flex h-11 w-11 items-center justify-center rounded-full text-zinc-500 active:bg-zinc-100 dark:active:bg-zinc-800"
+          className="flex h-11 w-11 items-center justify-center rounded-full text-zinc-500 dark:text-zinc-400 active:bg-zinc-100 dark:active:bg-zinc-800"
         >
           <svg
             viewBox="0 0 24 24"

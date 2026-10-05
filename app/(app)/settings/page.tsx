@@ -1,6 +1,9 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { signOut } from "./actions";
+
+export const metadata: Metadata = { title: "Settings" };
 
 export default async function SettingsPage() {
   const supabase = await createClient();
@@ -9,7 +12,7 @@ export default async function SettingsPage() {
   return (
     <section>
       <h1 className="text-2xl font-bold tracking-tight">Settings</h1>
-      <p className="mt-2 text-sm text-zinc-500">
+      <p className="mt-2 text-sm text-zinc-500 dark:text-zinc-400">
         Signed in as {data.user?.email ?? "unknown"}
       </p>
 

@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { isWithinLastDays, wellbeingTargetWeek } from "@/lib/dates";
 import { createClient } from "@/lib/supabase/server";
@@ -7,6 +8,8 @@ import { DateSwitcher } from "./date-switcher";
 import { WellbeingCard } from "./wellbeing-card";
 
 const first = (v: string | string[] | undefined) => (typeof v === "string" ? v : null);
+
+export const metadata: Metadata = { title: "Today" };
 
 export default async function TodayPage({ searchParams }: PageProps<"/today">) {
   const params = await searchParams;

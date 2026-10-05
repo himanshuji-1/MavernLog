@@ -4,7 +4,7 @@
 
 A mobile-first fitness progression web app. Users log bodyweight, daily habits and workout sets; plain, tested code decides next session's weights and weekly diet adjustments. Gemini only turns spoken sentences into structured data and explains the decisions. It never does the maths.
 
-**Status:** Phases 1–3 done and committed. Phase 4 built; waiting for your checks and okay. Phases 5–6 not started.
+**Status:** Phases 1–4 done and committed. Phase 5 built; waiting for your checks and okay. Phase 6 not started.
 
 **Phase 1 notes (deviations from the plan above):**
 - Next 16 renamed `middleware` to `proxy`, so the file is `proxy.ts`. It refreshes the session and sends signed-out users to `/login`.
@@ -27,6 +27,13 @@ A mobile-first fitness progression web app. Users log bodyweight, daily habits a
 - **The first week** has nothing to compare against, so it is a baseline review ("not enough data", nothing changes). Weeks with no logs at all are skipped.
 - Reviews are calculated when you open the Review tab and are **not recalculated** if you later edit an old log.
 - The seed's weight goes 90 → about 87.8 kg (not 86.5): the 2-week stall plus keeping every on-track week safely inside 0.3–0.7% makes that the realistic result.
+
+**Phase 5 notes:**
+- The weight chart's average is a *trailing* 7-day average (that day and the 6 before, drawn once it has 3+ weigh-ins). It's smoother than the Monday–Sunday weekly average the Review tab uses, so the numbers can differ slightly.
+- "Avg weekly loss" is computed from your logs (consecutive weeks with 4+ weigh-ins each), so it works even before you've opened the Review tab.
+- The goal line is always included in the chart's vertical range, so a goal far below your weight compresses the trend. Say if you'd rather it be optional.
+- Supabase silently caps a query at 1,000 rows. History and weigh-in queries are now read page by page so long histories aren't cut off.
+- Polish: white-on-emerald buttons and dim greys/reds were below the 4.5:1 contrast needed in places (emerald-600 → 700, extra dark-mode shades), small links now have 44px tap areas, per-page titles, loading skeletons, and safe-area padding.
 
 ---
 

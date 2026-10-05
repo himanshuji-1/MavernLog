@@ -1,4 +1,7 @@
+import type { Metadata } from "next";
 import { GoogleButton } from "./google-button";
+
+export const metadata: Metadata = { title: "Sign in" };
 
 export default async function LoginPage({
   searchParams,
@@ -17,12 +20,12 @@ export default async function LoginPage({
       <GoogleButton />
 
       {error && (
-        <p role="alert" className="text-center text-sm text-red-600">
+        <p role="alert" className="text-center text-sm text-red-600 dark:text-red-400">
           Sign-in didn&apos;t complete. Please try again.
         </p>
       )}
 
-      <p className="text-center text-xs text-zinc-500">
+      <p className="text-center text-xs text-zinc-500 dark:text-zinc-400">
         No passwords. Your data is private to your Google account.
       </p>
     </main>

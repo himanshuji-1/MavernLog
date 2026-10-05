@@ -58,7 +58,7 @@ export function DailyLogCard({
             ["Hunger", existing.hunger === null ? null : `${existing.hunger} / 5`],
           ].map(([label, value]) => (
             <div key={label}>
-              <dt className="text-xs text-zinc-500">{label}</dt>
+              <dt className="text-xs text-zinc-500 dark:text-zinc-400">{label}</dt>
               <dd className="text-lg font-semibold">{value ?? "—"}</dd>
             </div>
           ))}
@@ -116,7 +116,7 @@ export function DailyLogCard({
           className="h-12 w-full rounded-xl border border-zinc-300 bg-white px-4 text-lg font-semibold outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-600/30 aria-[invalid=true]:border-red-500 dark:border-zinc-700 dark:bg-zinc-900"
         />
         {e.steps && (
-          <p role="alert" className="mt-1.5 text-sm text-red-600">
+          <p role="alert" className="mt-1.5 text-sm text-red-600 dark:text-red-400">
             {e.steps}
           </p>
         )}
@@ -153,7 +153,7 @@ export function DailyLogCard({
       />
 
       {formError && (
-        <p role="alert" className="text-sm text-red-600">
+        <p role="alert" className="text-sm text-red-600 dark:text-red-400">
           {formError}
         </p>
       )}
@@ -161,7 +161,7 @@ export function DailyLogCard({
       <button
         type="submit"
         disabled={pending}
-        className="h-12 w-full rounded-xl bg-emerald-600 text-base font-semibold text-white transition active:scale-[0.98] disabled:opacity-60"
+        className="h-12 w-full rounded-xl bg-emerald-700 text-base font-semibold text-white transition active:scale-[0.98] disabled:opacity-60"
       >
         {pending ? "Saving…" : "Save"}
       </button>

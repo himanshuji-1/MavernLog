@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { z } from "zod";
@@ -11,6 +12,8 @@ import { finishWorkout } from "../actions";
 import { ExerciseLogger, type LoggedSet } from "./exercise-logger";
 
 const first = (v: string | string[] | undefined) => (typeof v === "string" ? v : null);
+
+export const metadata: Metadata = { title: "Workout" };
 
 export default async function WorkoutSessionPage({
   params,
@@ -70,12 +73,12 @@ export default async function WorkoutSessionPage({
 
   const header = (
     <div>
-      <Link href="/workout" className="text-sm text-zinc-500">
+      <Link href="/workout" className="inline-flex min-h-11 items-center text-sm text-zinc-500 dark:text-zinc-400">
         ← Workout
       </Link>
       <h1 className="mt-1 text-2xl font-bold tracking-tight">
         {finished ? "Workout done" : "Workout"}{" "}
-        <span className="text-base font-normal text-zinc-500">{formatShortDate(session.performed_on)}</span>
+        <span className="text-base font-normal text-zinc-500 dark:text-zinc-400">{formatShortDate(session.performed_on)}</span>
       </h1>
     </div>
   );
@@ -116,7 +119,7 @@ export default async function WorkoutSessionPage({
         })}
         <Link
           href="/workout"
-          className="flex h-12 items-center justify-center rounded-xl bg-emerald-600 text-base font-semibold text-white active:scale-[0.98]"
+          className="flex h-12 items-center justify-center rounded-xl bg-emerald-700 text-base font-semibold text-white active:scale-[0.98]"
         >
           Done
         </Link>

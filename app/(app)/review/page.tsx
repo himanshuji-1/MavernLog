@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { formatShortDate } from "@/lib/dates";
 import { LOSS_ON_TRACK_MAX_PCT, LOSS_ON_TRACK_MIN_PCT } from "@/lib/engine/weeklyReview";
@@ -12,9 +13,9 @@ const pct = (n: number, d = 2) => `${Number(n.toFixed(d))}%`;
 function Stat({ label, value, hint }: { label: string; value: string; hint?: string }) {
   return (
     <div>
-      <dt className="text-xs text-zinc-500">{label}</dt>
+      <dt className="text-xs text-zinc-500 dark:text-zinc-400">{label}</dt>
       <dd className="text-lg font-semibold">{value}</dd>
-      {hint && <p className="text-xs text-zinc-500">{hint}</p>}
+      {hint && <p className="text-xs text-zinc-500 dark:text-zinc-400">{hint}</p>}
     </div>
   );
 }
@@ -76,6 +77,8 @@ function ReviewCard({ review, detailed }: { review: ReviewRow; detailed: boolean
   );
 }
 
+export const metadata: Metadata = { title: "Weekly review" };
+
 export default async function ReviewPage({ searchParams }: PageProps<"/review">) {
   const params = await searchParams;
   const asOf = typeof params.asOf === "string" ? params.asOf : null;
@@ -127,7 +130,7 @@ export default async function ReviewPage({ searchParams }: PageProps<"/review">)
           <ReviewCard review={latest} detailed />
           {older.length > 0 && (
             <div>
-              <h2 className="mb-2 text-sm font-semibold text-zinc-500">Earlier weeks</h2>
+              <h2 className="mb-2 text-sm font-semibold text-zinc-500 dark:text-zinc-400">Earlier weeks</h2>
               <ul className="flex flex-col gap-2">
                 {older.map((r) => (
                   <li key={r.week_start}>

@@ -25,4 +25,17 @@ body {
   /* No rubber-band flash and no tap highlight: feels more like an app. */
   overscroll-behavior-y: none;
   -webkit-tap-highlight-color: transparent;
+  /* Landscape phones with a notch */
+  padding-inline: env(safe-area-inset-left) env(safe-area-inset-right);
+}
+
+/* Placeholders must stay readable (the browser default is too faint in dark mode). */
+::placeholder {
+  color: #71717a;
+  opacity: 1;
+}
+@media (prefers-color-scheme: dark) {
+  ::placeholder {
+    color: #a1a1aa;
+  }
 }

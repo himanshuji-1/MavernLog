@@ -75,7 +75,7 @@ export function Stepper({
             aria-describedby={error ? `${name}-error` : undefined}
             className="h-12 w-full rounded-xl border border-zinc-300 bg-white px-3 pr-12 text-center text-lg font-semibold outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-600/30 aria-[invalid=true]:border-red-500 dark:border-zinc-700 dark:bg-zinc-900"
           />
-          <span className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-sm text-zinc-500">
+          <span className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-sm text-zinc-500 dark:text-zinc-400">
             {unit}
           </span>
         </div>
@@ -89,7 +89,7 @@ export function Stepper({
         </button>
       </div>
       {error && (
-        <p id={`${name}-error`} role="alert" className="mt-1.5 text-sm text-red-600">
+        <p id={`${name}-error`} role="alert" className="mt-1.5 text-sm text-red-600 dark:text-red-400">
           {error}
         </p>
       )}
