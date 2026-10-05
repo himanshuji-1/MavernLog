@@ -1,35 +1,9 @@
 "use client";
 
-import { useRef, useState, useSyncExternalStore, useTransition } from "react";
+import { useCallback, useRef, useState, useTransition } from "react";
+import { useSpeechInput } from "@/components/use-speech-input";
 import { DAILY_KEYS, type ConfirmDraft, type DailyKey, type DateOption, type DraftField } from "@/lib/ai/quicklog";
 import { saveQuickLog } from "./quick-log-actions";
-
-// ---- Web Speech API (not in TypeScript's DOM types, and absent in some browsers)
-interface SpeechResultLike {
-  0: { transcript: string };
-}
-interface SpeechEventLike {
-  results: ArrayLike<SpeechResultLike>;
-}
-interface SpeechRecognitionLike {
-  lang: string;
-  interimResults: boolean;
-  continuous: boolean;
-  start(): void;
-  stop(): void;
-  onresult: ((e: SpeechEventLike) => void) | null;
-  onend: (() => void) | null;
-  onerror: (() => void) | null;
-}
-type SpeechCtor = new () => SpeechRecognitionLike;
-
-function getSpeechCtor(): SpeechCtor | null {
-  if (typeof window === "undefined") return null;
-  const w = window as unknown as { SpeechRecognition?: SpeechCtor; webkitSpeechRecognition?: SpeechCtor };
-  return w.SpeechRecognition ?? w.webkitSpeechRecognition ?? null;
-}
-
-const subscribeNever = () => () => {};
 
 // ---- labels
 const DAILY_LABELS: Record<DailyKey, { label: string; unit?: string; mode: "decimal" | "numeric" | "select" }> = {
@@ -80,33 +54,18 @@ export function QuickLogCard({
   const [doneMessage, setDoneMessage] = useState("");
   const [saving, startSaving] = useTransition();
 
-  // ---- voice
-  const speechSupported = useSyncExternalStore(subscribeNever, () => getSpeechCtor() !== null, () => false);
-  const [listening, setListening] = useState(false);
-  const recognition = useRef<SpeechRecognitionLike | null>(null);
+  // ---- voice: whatever was already typed stays, and the spoken sentence is added after it
   const baseText = useRef("");
+  const onTranscript = useCallback((spoken: string) => setText(`${baseText.current}${spoken}`.slice(0, 500)), []);
+  const speech = useSpeechInput(onTranscript);
 
   function toggleMic() {
-    if (listening) {
-      recognition.current?.stop();
+    if (speech.listening) {
+      speech.stop();
       return;
     }
-    const Ctor = getSpeechCtor();
-    if (!Ctor) return;
-    const rec = new Ctor();
-    rec.lang = navigator.language || "en-US";
-    rec.interimResults = true;
-    rec.continuous = false;
     baseText.current = text.trim() ? `${text.trim()} ` : "";
-    rec.onresult = (e) => {
-      const spoken = Array.from(e.results).map((r) => r[0].transcript).join("");
-      setText(`${baseText.current}${spoken}`.slice(0, 500));
-    };
-    rec.onend = () => setListening(false);
-    rec.onerror = () => setListening(false);
-    recognition.current = rec;
-    setListening(true);
-    rec.start();
+    speech.start();
   }
 
   // ---- parse
@@ -490,7 +449,7 @@ export function QuickLogCard({
         onChange={(e) => setText(e.target.value)}
         maxLength={500}
         rows={3}
-        placeholder="e.g. Weighed 84.2 this morning, slept 7 hours, about 9k steps, diet mostly on"
+        placeholder={speech.listening ? "Listening…" : "e.g. Weighed 84.2 this morning, slept 7 hours, about 9k steps, diet mostly on"}
         className="mt-3 w-full resize-none rounded-xl border border-zinc-300 bg-white p-3 text-base outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-600/30 dark:border-zinc-700 dark:bg-zinc-900"
       />
 
@@ -501,32 +460,46 @@ export function QuickLogCard({
       )}
 
       <div className="mt-3 flex gap-2">
-        {speechSupported && (
+        {speech.supported && (
           <button
             type="button"
             onClick={toggleMic}
             disabled={busy}
-            aria-pressed={listening}
-            aria-label={listening ? "Stop listening" : "Speak"}
+            aria-pressed={speech.listening}
+            aria-label={speech.listening ? "Stop listening" : "Speak"}
             className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border text-xl transition active:scale-95 ${
-              listening
+              speech.listening
                 ? "border-red-500 bg-red-50 text-red-600 dark:bg-red-950/30 dark:text-red-400"
                 : "border-zinc-300 dark:border-zinc-700"
             }`}
           >
-            <span aria-hidden="true">{listening ? "■" : "🎤"}</span>
+            <span aria-hidden="true">{speech.listening ? "■" : "🎤"}</span>
           </button>
         )}
         <button
           type="button"
           onClick={parse}
-          disabled={busy || text.trim() === ""}
+          disabled={busy || speech.listening || text.trim() === ""}
           className="h-12 flex-1 rounded-xl bg-emerald-700 text-base font-semibold text-white transition active:scale-[0.98] disabled:opacity-60"
         >
           {busy ? "Reading…" : "Review"}
         </button>
       </div>
-      {!speechSupported && (
+      {speech.listening && (
+        <p role="status" className="mt-2 flex items-center gap-2 text-sm font-medium text-red-600 dark:text-red-400">
+          <span className="relative flex h-2.5 w-2.5" aria-hidden="true">
+            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-500 opacity-75 motion-reduce:animate-none" />
+            <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-red-500" />
+          </span>
+          Listening… speak your sentence. It stops by itself when you pause.
+        </p>
+      )}
+      {speech.error && (
+        <p role="alert" className="mt-2 text-sm text-amber-800 dark:text-amber-300">
+          {speech.error}
+        </p>
+      )}
+      {!speech.supported && (
         <p className="mt-2 text-xs text-zinc-500 dark:text-zinc-400">
           Tip: tap the microphone on your keyboard to dictate.
         </p>
